@@ -1,3 +1,10 @@
+v0.9.2
+=================
+- Fixed parallel downloads bug
+- Improved tables with loading animation
+- Removed buttons above table, there are now "Download" & "Play" buttons directly in the table
+- Improved context menu
+
 v0.9.1
 ==================
 - Fixed several bugs

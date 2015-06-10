@@ -598,7 +598,7 @@ public class MainFrame extends JFrame {
 
         homePanelLayout.setHorizontalGroup(homePanelLayout.createSequentialGroup()
                         .addGroup(homePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                .addComponent(adPane)
+                                //.addComponent(adPane)
                                 .addGroup(homePanelLayout.createSequentialGroup()
                                         .addGroup(homePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addComponent(homeFirstTopComboBox)
@@ -617,8 +617,8 @@ public class MainFrame extends JFrame {
                                         .addGroup(homePanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                 .addComponent(busyFirstTopScrollPane)
                                                 .addComponent(busySecondTopScrollPane))))
-                        .addGroup(homePanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(adPane, 90, 90, 90))
+                        /*.addGroup(homePanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addComponent(adPane, 90, 90, 90))*/
         );
 
         searchPanel = new JPanel();
@@ -865,21 +865,29 @@ public class MainFrame extends JFrame {
 
         GroupLayout downloadPanelLayout = new GroupLayout(downloadPanel);
         downloadPanel.setLayout(downloadPanelLayout);
+
+        downloadPanelLayout.setAutoCreateGaps(true);
+        downloadPanelLayout.setAutoCreateContainerGaps(true);
+
         downloadPanelLayout.setHorizontalGroup(
-                downloadPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                downloadPanelLayout.createSequentialGroup()
+                        .addGroup(downloadPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addComponent(adPane)
                         .addGroup(downloadPanelLayout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(downloadPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addComponent(downloadScrollPane, GroupLayout.DEFAULT_SIZE, 849, Short.MAX_VALUE))
-                                .addContainerGap())
+                                .addContainerGap()))
         );
-        downloadPanelLayout.setVerticalGroup(
-                downloadPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(downloadPanelLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(downloadScrollPane, GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
-                                .addContainerGap())
+        downloadPanelLayout.setVerticalGroup(downloadPanelLayout.createSequentialGroup()
+                        .addGroup(downloadPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addGroup(downloadPanelLayout.createSequentialGroup()
+                                        .addContainerGap()
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(downloadScrollPane, GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
+                                        .addContainerGap()))
+                        .addGroup(downloadPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addComponent(adPane, 90, 90, 90))
         );
 
         menuBar = new JMenuBar();

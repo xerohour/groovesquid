@@ -50,7 +50,7 @@ def getVersionName() {
 
 // Basic project information
 group = 'com.groovesquid'
-version = '0.9.2-SNAPSHOT'
+version = '0.9.2'
 description = "Groovesquid"
 mainClassName = "com.groovesquid.Groovesquid"
 

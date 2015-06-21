@@ -71,7 +71,7 @@ public class Deezer extends Hoster {
                     return null;
                 }
                 Long trackId = data.get(0).asObject().get("id").asLong();
-                String trackResponse = get("https://api.deezer.com/track/" + trackId + "?output=json");
+                String trackResponse = get("https://api.deezer.com/track/" + trackId + "?output=json&strict=on");
                 JsonObject trackJson = JsonObject.readFrom(trackResponse);
 
                 JsonObject jsonObject = new JsonObject().add("id", trackJson.get("id").asLong()).add("title", trackJson.get("title").asString()).add("artist", trackJson.get("artist").asObject().get("name").asString()).add("format", 3);

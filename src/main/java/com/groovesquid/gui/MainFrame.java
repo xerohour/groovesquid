@@ -531,6 +531,11 @@ public class MainFrame extends JFrame {
             public void mousePressed(MouseEvent evt) {
                 tableMousePressed(evt);
             }
+
+            @Override
+            public void mouseReleased(MouseEvent evt) {
+                tableMouseReleased(evt);
+            }
         });
 
         homeFirstTopScrollPane = new JScrollPane();
@@ -559,6 +564,11 @@ public class MainFrame extends JFrame {
             @Override
             public void mousePressed(MouseEvent evt) {
                 tableMousePressed(evt);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent evt) {
+                tableMouseReleased(evt);
             }
         });
 
@@ -645,6 +655,11 @@ public class MainFrame extends JFrame {
             @Override
             public void mousePressed(MouseEvent evt) {
                 tableMousePressed(evt);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent evt) {
+                tableMouseReleased(evt);
             }
         });
         AbstractHyperlinkAction<Object> act = new AbstractHyperlinkAction<Object>() {
@@ -853,6 +868,11 @@ public class MainFrame extends JFrame {
             @Override
             public void mousePressed(MouseEvent evt) {
                 tableMousePressed(evt);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent evt) {
+                tableMouseReleased(evt);
             }
         });
         downloadTable.addKeyListener(new KeyAdapter() {
@@ -1735,24 +1755,41 @@ public class MainFrame extends JFrame {
             }
 
             if (evt.isPopupTrigger()) {
-                int column = table.columnAtPoint(evt.getPoint());
-
-                if (table.getSelectedRowCount() == 0 || !table.isRowSelected(row)) {
-                    table.changeSelection(row, column, false, false);
-                }
-
-                if (isSongTable) {
-                    songTablePopupMenu.show(table, evt.getX(), evt.getY());
-                } else if (isAlbumTable) {
-                    albumTablePopupMenu.show(table, evt.getX(), evt.getY());
-                } else if (isArtistTable) {
-                    artistTablePopupMenu.show(table, evt.getX(), evt.getY());
-                } else if (isDownloadTable) {
-                    downloadTablePopupMenu.show(table, evt.getX(), evt.getY());
-                }
+                tableShowPopupMenu(evt);
             }
         } else {
             table.clearSelection();
+        }
+    }
+
+    public void tableMouseReleased(MouseEvent evt) {
+        if (GuiUtils.getSystem().equals(GuiUtils.OperatingSystem.WINDOWS) && evt.isPopupTrigger()) {
+            tableShowPopupMenu(evt);
+        }
+    }
+
+    private void tableShowPopupMenu(MouseEvent evt) {
+        JTable table = (JTable) evt.getSource();
+        boolean isSongTable = table.getModel() instanceof SongSearchTableModel || table.getModel() instanceof TopSongTableModel;
+        boolean isArtistTable = table.getModel() instanceof ArtistSearchTableModel;
+        boolean isAlbumTable = table.getModel() instanceof AlbumSearchTableModel;
+        boolean isDownloadTable = table.getModel() instanceof DownloadTableModel;
+
+        int row = table.rowAtPoint(evt.getPoint());
+        int column = table.columnAtPoint(evt.getPoint());
+
+        if (table.getSelectedRowCount() == 0 || !table.isRowSelected(row)) {
+            table.changeSelection(row, column, false, false);
+        }
+
+        if (isSongTable) {
+            songTablePopupMenu.show(table, evt.getX(), evt.getY());
+        } else if (isAlbumTable) {
+            albumTablePopupMenu.show(table, evt.getX(), evt.getY());
+        } else if (isArtistTable) {
+            artistTablePopupMenu.show(table, evt.getX(), evt.getY());
+        } else if (isDownloadTable) {
+            downloadTablePopupMenu.show(table, evt.getX(), evt.getY());
         }
     }
 

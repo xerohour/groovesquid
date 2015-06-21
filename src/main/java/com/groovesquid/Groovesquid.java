@@ -31,7 +31,7 @@ public class Groovesquid {
     private static SettingsFrame settingsFrame;
     private static AboutFrame aboutFrame;
 
-    private static String version = "0.9.2";
+    private static String version = "0.9.3";
     private static File dataDirectory = new File(Utils.dataDirectory() + File.separator + ".groovesquid");
     private static Config config;
     private static DownloadService downloadService;

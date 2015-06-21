@@ -2,6 +2,7 @@ v0.9.3
 =================
 - Skip deezer when API is offline
 - Fixed context menu on windows
+- Allow Mac OS X users to automatically add songs to their iTunes library
 
 v0.9.2
 =================

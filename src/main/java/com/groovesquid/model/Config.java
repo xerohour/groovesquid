@@ -10,7 +10,7 @@ import java.util.Locale;
 public class Config {
 
     public enum DownloadComplete {
-        DO_NOTHING, OPEN_FILE, OPEN_DIRECTORY;
+        DO_NOTHING, OPEN_FILE, OPEN_DIRECTORY, ADD_ITUNES, ADD_ITUNES_REMOVE;
         public static String[] names() {
             DownloadComplete[] states = values();
             String[] names = new String[states.length];

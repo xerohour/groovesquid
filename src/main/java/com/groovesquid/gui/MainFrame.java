@@ -29,8 +29,10 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -1387,6 +1389,33 @@ public class MainFrame extends JFrame {
                             // open dir
                             Desktop.getDesktop().open(new File(track.getPath()).getParentFile());
                         } catch (IOException ex) {
+                            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } else if (Groovesquid.getConfig().getDownloadComplete() == DownloadComplete.ADD_ITUNES.ordinal() || Groovesquid.getConfig().getDownloadComplete() == DownloadComplete.ADD_ITUNES_REMOVE.ordinal()) {
+                        try {
+                            // run applescript
+                            String[] args = {"osascript", "-e", "tell application \"iTunes\" to add POSIX file \"" + track.getStore().getDescription() + "\""};
+                            final Process process = Runtime.getRuntime().exec(args);
+                            new Thread(new Runnable() {
+                                public void run() {
+                                    BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                                    String line;
+                                    try {
+                                        while ((line = input.readLine()) != null) {
+                                            Logger.getLogger(MainFrame.class.getName()).log(Level.INFO, "[AppleScript] " + line);
+                                        }
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }).start();
+                            process.waitFor();
+
+                            // remove file if wanted
+                            if (Groovesquid.getConfig().getDownloadComplete() == DownloadComplete.ADD_ITUNES_REMOVE.ordinal()) {
+                                track.getStore().deleteStore();
+                            }
+                        } catch (Exception ex) {
                             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }

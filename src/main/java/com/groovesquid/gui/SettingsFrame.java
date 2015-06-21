@@ -86,7 +86,7 @@ public class SettingsFrame extends JFrame {
         downloadDirectoryTextField.setRequestFocusEnabled(false);
 
         maxParallelDownloadsSpinner = new JSpinner();
-        maxParallelDownloadsSpinner.setModel(new SpinnerNumberModel(Integer.valueOf(10), Integer.valueOf(1), null, Integer.valueOf(1)));
+        maxParallelDownloadsSpinner.setModel(new SpinnerNumberModel(10, 1, null, 1));
         maxParallelDownloadsSpinner.setValue(10);
 
         saveSettingsButton = new JButton(I18n.getLocaleString("SAVE_AND_CLOSE"));
@@ -391,12 +391,11 @@ public class SettingsFrame extends JFrame {
     }
     
     public boolean checkSettings() {
-        if (new File(downloadDirectoryTextField.getText()).exists()) {
-            return true;
-        } else {
+        if (!new File(downloadDirectoryTextField.getText()).exists()) {
             JOptionPane.showMessageDialog(this, I18n.getLocaleString("INVALID_DOWNLOAD_DIRECTORY"), I18n.getLocaleString("ERROR"), JOptionPane.ERROR_MESSAGE);
+            return false;
         }
-        return false;
+        return !((downloadCompletedComboBox.getSelectedIndex() == Config.DownloadComplete.ADD_ITUNES.ordinal() || downloadCompletedComboBox.getSelectedIndex() == Config.DownloadComplete.ADD_ITUNES_REMOVE.ordinal()) && !GuiUtils.getSystem().equals(GuiUtils.OperatingSystem.MAC));
     }
     
     public JTextField getDownloadDirectoryTextField() {

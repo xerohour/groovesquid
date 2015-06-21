@@ -216,7 +216,6 @@ public class DownloadService extends HttpService {
                 synchronized (this) {
                     httpGet = null;
                 }
-                fireDownloadStatusChanged();
             }
         }
 

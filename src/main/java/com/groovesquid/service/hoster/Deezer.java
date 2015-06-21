@@ -65,41 +65,46 @@ public class Deezer extends Hoster {
         }
 
         if (searchResponse != null) {
-            JsonArray data = JsonObject.readFrom(searchResponse).get("data").asArray();
-            if (data.isEmpty()) {
-                return null;
+            try {
+                JsonArray data = JsonObject.readFrom(searchResponse).get("data").asArray();
+                if (data.isEmpty()) {
+                    return null;
+                }
+                Long trackId = data.get(0).asObject().get("id").asLong();
+                String trackResponse = get("https://api.deezer.com/track/" + trackId + "?output=json");
+                JsonObject trackJson = JsonObject.readFrom(trackResponse);
+
+                JsonObject jsonObject = new JsonObject().add("id", trackJson.get("id").asLong()).add("title", trackJson.get("title").asString()).add("artist", trackJson.get("artist").asObject().get("name").asString()).add("format", 3);
+                String[] previewSplit = trackJson.get("preview").asString().split("/");
+                String md5 = previewSplit[previewSplit.length - 1].split("-")[0];
+                String enc = encryptAes(jsonObject.toString(), md5);
+                String url = "https://cdn-proxy-{0}.rezeed.cc/stream/1/{1}.mp3".replace("{0}", md5.substring(0, 1)).replace("{1}", md5 + enc);
+                String api = "https://cdn-proxy-{0}.rezeed.cc/api/1/{1}.mp3".replace("{0}", md5.substring(0, 1)).replace("{1}", md5 + enc);
+
+                List<Header> headers = new ArrayList<Header>(Arrays.asList(browserHeaders));
+                headers.add(new BasicHeader("Referer", "https://deezer.link/"));
+                String rezeedResponse = get(api, headers);
+                //System.out.println(rezeedResponse);
+
+                Matcher matcher = urlPattern.matcher(rezeedResponse);
+                matcher.find();
+                int matchStart = matcher.start(1);
+                int matchEnd = matcher.end();
+                String mp3Url = rezeedResponse.substring(matchStart, matchEnd);
+
+                Pattern p = Pattern.compile("\\[(.*?)\\]");
+                Matcher m = p.matcher(rezeedResponse);
+                m.find();
+                String[] keyStrSplit = m.group(1).split(",");
+                for (int i = 0; i < keyStrSplit.length; i++) {
+                    blowfishKey[i] = (byte) Integer.parseInt(keyStrSplit[i]);
+                }
+
+                return mp3Url;
+            } catch (Exception ignored) {
+
             }
-            Long trackId = data.get(0).asObject().get("id").asLong();
-            String trackResponse = get("https://api.deezer.com/track/" + trackId + "?output=json");
-            JsonObject trackJson = JsonObject.readFrom(trackResponse);
 
-            JsonObject jsonObject = new JsonObject().add("id", trackJson.get("id").asLong()).add("title", trackJson.get("title").asString()).add("artist", trackJson.get("artist").asObject().get("name").asString()).add("format", 3);
-            String[] previewSplit = trackJson.get("preview").asString().split("/");
-            String md5 = previewSplit[previewSplit.length - 1].split("-")[0];
-            String enc = encryptAes(jsonObject.toString(), md5);
-            String url = "https://cdn-proxy-{0}.rezeed.cc/stream/1/{1}.mp3".replace("{0}", md5.substring(0, 1)).replace("{1}", md5 + enc);
-            String api = "https://cdn-proxy-{0}.rezeed.cc/api/1/{1}.mp3".replace("{0}", md5.substring(0, 1)).replace("{1}", md5 + enc);
-
-            List<Header> headers = new ArrayList<Header>(Arrays.asList(browserHeaders));
-            headers.add(new BasicHeader("Referer", "https://deezer.link/"));
-            String rezeedResponse = get(api, headers);
-            //System.out.println(rezeedResponse);
-
-            Matcher matcher = urlPattern.matcher(rezeedResponse);
-            matcher.find();
-            int matchStart = matcher.start(1);
-            int matchEnd = matcher.end();
-            String mp3Url = rezeedResponse.substring(matchStart, matchEnd);
-
-            Pattern p = Pattern.compile("\\[(.*?)\\]");
-            Matcher m = p.matcher(rezeedResponse);
-            m.find();
-            String[] keyStrSplit = m.group(1).split(",");
-            for (int i = 0; i < keyStrSplit.length; i++) {
-                blowfishKey[i] = (byte) Integer.parseInt(keyStrSplit[i]);
-            }
-
-            return mp3Url;
         }
 
         return null;

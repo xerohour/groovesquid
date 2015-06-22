@@ -59,7 +59,7 @@ public class Deezer extends Hoster {
 
         String searchResponse = null;
         try {
-            searchResponse = get("http://api.deezer.com/search?q=" + URLEncoder.encode(query, "UTF-8"));
+            searchResponse = get("http://api.deezer.com/search?q=" + URLEncoder.encode(query, "UTF-8"), Arrays.asList(browserHeaders));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -71,7 +71,7 @@ public class Deezer extends Hoster {
                     return null;
                 }
                 Long trackId = data.get(0).asObject().get("id").asLong();
-                String trackResponse = get("https://api.deezer.com/track/" + trackId + "?output=json&strict=on");
+                String trackResponse = get("https://api.deezer.com/track/" + trackId + "?output=json&strict=on", Arrays.asList(browserHeaders));
                 JsonObject trackJson = JsonObject.readFrom(trackResponse);
 
                 JsonObject jsonObject = new JsonObject().add("id", trackJson.get("id").asLong()).add("title", trackJson.get("title").asString()).add("artist", trackJson.get("artist").asObject().get("name").asString()).add("format", 3);

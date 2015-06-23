@@ -1,9 +1,11 @@
 package com.groovesquid.util;
 
+import com.groovesquid.model.Artist;
 import com.groovesquid.model.Song;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.text.DecimalFormat;
+import java.util.Collections;
 import java.util.Locale;
 
 public class FilenameSchemeParser {
@@ -48,17 +50,24 @@ public class FilenameSchemeParser {
         this.illegalReplaceChar = illegalReplaceChar;
     }
 
+    public boolean validateFilenameScheme(String filenameScheme) {
+        if (filenameScheme == null || filenameScheme.trim().isEmpty()) {
+            return false;
+        }
+        try {
+            Song exampleSong = new Song(null, "Example Title", Collections.singletonList(new Artist(null, "Example Artist")));
+            parse(exampleSong, filenameScheme);
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
     public String parse(Song song) throws IllegalArgumentException {
         return parse(song, this.filenameScheme);
     }
 
     public String parse(Song song, String filenameScheme) throws IllegalArgumentException {
-        if (filenameScheme == null || filenameScheme.trim().isEmpty())
-            throw new IllegalArgumentException("scheme may not be empty");
-        return parse0(song, filenameScheme);
-    }
-
-    private String parse0(Song song, String filenameScheme) throws IllegalArgumentException {
         int len = filenameScheme.length();
         int pos = 0;
         int bracketLevel = 0;
@@ -108,9 +117,7 @@ public class FilenameSchemeParser {
         String result = matchNumberTag('#', tag, song, conditionalText);
         if (result == null) { 
         	result = matchNumberTag('%', tag, song, conditionalText);
-        	if (result != null && song.getOrderNum().equals(null))
-        		result = "";
-        }	        	
+        }
         if (result == null)
             result = matchTag(TAG_ARTIST, tag, song.getArtists() != null ? song.getArtistNames() : "", conditionalText, song);
         if (result == null)
@@ -128,7 +135,7 @@ public class FilenameSchemeParser {
             return null;
         String parsedConditionalText = null;
         if (conditionalText != null)
-            parsedConditionalText = parse0(song, conditionalText);
+            parsedConditionalText = parse(song, conditionalText);
         if (conditionalText != null)
             return parsedConditionalText;
         
@@ -154,7 +161,7 @@ public class FilenameSchemeParser {
             return null;
         String parsedConditionalText = null;
         if (conditionalText != null)
-            parsedConditionalText = parse0(song, conditionalText);
+            parsedConditionalText = parse(song, conditionalText);
         if (entryValue == null || entryValue.isEmpty())
             return "";
         if (conditionalText != null)
@@ -175,7 +182,7 @@ public class FilenameSchemeParser {
             char c = name.charAt(i);
             if (Character.isWhitespace(c)) {
                 sb.append(whitespaceReplaceChar);
-            } else if (Character.isAlphabetic(c) || Character.isDigit(c) || ArrayUtils.contains(allowedSpecialChars, c)) {
+            } else if (Character.isLetterOrDigit(c) || ArrayUtils.contains(allowedSpecialChars, c)) {
                 sb.append(c);
             } else {
                 sb.append(illegalReplaceChar);

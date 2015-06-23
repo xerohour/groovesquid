@@ -395,6 +395,12 @@ public class SettingsFrame extends JFrame {
             JOptionPane.showMessageDialog(this, I18n.getLocaleString("INVALID_DOWNLOAD_DIRECTORY"), I18n.getLocaleString("ERROR"), JOptionPane.ERROR_MESSAGE);
             return false;
         }
+
+        if (!Groovesquid.getDownloadService().getFilenameSchemeParser().validateFilenameScheme(fileNameSchemeTextField.getText())) {
+            JOptionPane.showMessageDialog(this, I18n.getLocaleString("INVALID_FILENAME_SCHEME"), I18n.getLocaleString("ERROR"), JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
         return !((downloadCompletedComboBox.getSelectedIndex() == Config.DownloadComplete.ADD_ITUNES.ordinal() || downloadCompletedComboBox.getSelectedIndex() == Config.DownloadComplete.ADD_ITUNES_REMOVE.ordinal()) && !GuiUtils.getSystem().equals(GuiUtils.OperatingSystem.MAC));
     }
     

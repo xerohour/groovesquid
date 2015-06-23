@@ -124,6 +124,7 @@ public class Groovesquid {
         } else {
             config = new Config();
         }
+        config.increaseApplicationStartups();
     }
 
     public static File getDataDirectory() {

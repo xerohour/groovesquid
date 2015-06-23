@@ -33,6 +33,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -145,6 +146,19 @@ public class MainFrame extends JFrame {
         ((DownloadTableModel) downloadTable.getModel()).setSongDownloads(Groovesquid.getConfig().getDownloads());
 
         Groovesquid.getPlayService().setListener(playbackListener);
+
+        if (Groovesquid.getConfig().getApplicationStartups() == 10) {
+            EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    if (JOptionPane.showConfirmDialog(null, I18n.getLocaleString("INFORMATION_DONATE"), I18n.getLocaleString("DONATE"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == 0) {
+                        try {
+                            Desktop.getDesktop().browse(URI.create("http://groovesquid.com/#donate"));
+                        } catch (IOException ignored) {
+                        }
+                    }
+                }
+            });
+        }
     }
 
     protected void loadResources() {

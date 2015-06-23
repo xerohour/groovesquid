@@ -81,6 +81,7 @@ public class Config {
     private String proxyHost, originalProxyHost;
     private Integer proxyPort, originalProxyPort;
     private String preferredHoster, originalPreferredHoster;
+    private int applicationStartups = 0;
 
     public Config() {
         originalVersion = Groovesquid.getVersion();
@@ -218,5 +219,14 @@ public class Config {
     public void setSecondTopTableType(int secondTopTableType) {
         this.secondTopTableType = secondTopTableType;
         Groovesquid.saveConfig();
+    }
+
+    public void increaseApplicationStartups() {
+        this.applicationStartups += 1;
+        Groovesquid.saveConfig();
+    }
+
+    public int getApplicationStartups() {
+        return applicationStartups;
     }
 }

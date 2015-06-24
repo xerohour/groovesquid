@@ -111,6 +111,7 @@ public class MainFrame extends JFrame {
         add(String.format(I18n.getLocaleString("TOP_SONGS"), "iTunes") + " (ES)");
         add(String.format(I18n.getLocaleString("TOP_SONGS"), "iTunes") + " (AU)");
         add(String.format(I18n.getLocaleString("TOP_SONGS"), "iTunes") + " (BR)");
+        add("Beatport Pulse Chart");
     }};
     
     /**
@@ -1058,6 +1059,8 @@ public class MainFrame extends JFrame {
                     return Groovesquid.getSearchService().getTopItunesSongs("AU");
                 } else if (comboBox.getSelectedItem().equals(homeTopSources.get(10))) {
                     return Groovesquid.getSearchService().getTopItunesSongs("BR");
+                } else if (comboBox.getSelectedItem().equals(homeTopSources.get(11))) {
+                    return Groovesquid.getSearchService().getBeatportPulsechart();
                 }
                 return new ArrayList<Song>();
             }

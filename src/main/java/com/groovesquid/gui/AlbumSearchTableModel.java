@@ -69,4 +69,13 @@ public class AlbumSearchTableModel extends AbstractTableModel {
         albums.add(song);
         fireTableStructureChanged();
     }
+
+    @Override
+    public Class<?> getColumnClass(int column) {
+        if (albums.size() > 0 && getRowCount() > 0) {
+            return getValueAt(0, column).getClass();
+        } else {
+            return Object.class;
+        }
+    }
 }

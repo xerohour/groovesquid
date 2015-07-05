@@ -97,6 +97,10 @@ public class SquidTableColumnModel extends DefaultTableColumnModel {
                 tc.setCellRenderer(new ProgressCellRenderer());
                 tc.setMinWidth(170);
             }
+        } else if (table.getModel() instanceof AlbumSearchTableModel) {
+            if (tc.getModelIndex() >= 2) {
+                tc.setMaxWidth(100);
+            }
         }
         super.addColumn(tc);
     }

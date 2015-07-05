@@ -28,7 +28,16 @@ public class Utils {
     public static String md5(String s) {
         try {
             return bytesToHexString(md5digest.digest(s.getBytes("UTF-8")));
-        } catch (UnsupportedEncodingException ex) {
+        } catch (Exception ex) {
+            // utf-8 always available
+            throw new RuntimeException("no UTF-8 decoder available", ex);
+        }
+    }
+
+    public static String md5(byte[] b) {
+        try {
+            return bytesToHexString(md5digest.digest(b));
+        } catch (Exception ex) {
             // utf-8 always available
             throw new RuntimeException("no UTF-8 decoder available", ex);
         }

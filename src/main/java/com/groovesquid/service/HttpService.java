@@ -6,6 +6,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
@@ -140,6 +141,44 @@ public class HttpService {
                 httpPost.setHeaders(headers.toArray(headersArr));
             }
             httpPost.setEntity(new UrlEncodedFormEntity(data, "UTF-8"));
+
+            HttpResponse httpResponse = httpClient.execute(httpPost);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            httpEntity = httpResponse.getEntity();
+
+            StatusLine statusLine = httpResponse.getStatusLine();
+            int statusCode = statusLine.getStatusCode();
+            if (statusCode == HttpStatus.SC_OK) {
+                httpEntity.writeTo(baos);
+            } else {
+                throw new RuntimeException("status code: " + statusLine.getStatusCode());
+            }
+
+            responseContent = baos.toString("UTF-8");
+
+        } catch (Exception ex) {
+            log.log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                EntityUtils.consume(httpEntity);
+            } catch (IOException ex) {
+                log.log(Level.SEVERE, null, ex);
+            }
+        }
+        return responseContent;
+    }
+
+    public String post(String url, String data, List<Header> headers) {
+        String responseContent = null;
+        HttpEntity httpEntity = null;
+        try {
+            HttpPost httpPost = new HttpPost(url);
+            httpPost.setHeader(HTTP.USER_AGENT, userAgent);
+            if (headers != null) {
+                Header[] headersArr = new Header[headers.size()];
+                httpPost.setHeaders(headers.toArray(headersArr));
+            }
+            httpPost.setEntity(new StringEntity(data));
 
             HttpResponse httpResponse = httpClient.execute(httpPost);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
